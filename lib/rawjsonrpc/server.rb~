@@ -1,0 +1,12 @@
+# encoding: utf-8
+
+# server.rb : Implements the base server and some basic servers
+#
+# Copyright January 2012, Alexander Schrode.  All Rights Reserved.
+#
+# This is free software. Please see the LICENSE and COPYING files for details.
+
+require 'socket'
+
+
+
