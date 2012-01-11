@@ -1,6 +1,113 @@
 = rawjsonrpc
 
-Description goes here.
+rawjsonrpc is a libary to create a jsonrpc client for every type of stream. It
+also profides one client for tcpsocket, an server for one client and on server
+based on gserver from the ruby stdlib. 
+This is libary is a my first try in ruby to create a gem. Its more a test how 
+gems work but i hope i can help somebody with this lib. 
+
+== load lib
+
+install libary
+
+  gem install rawjsonrpc
+
+include rawjsonrpc in your programm
+
+  require 'rawjsonrpc'
+
+== Use the client TCP 
+
+Create a client to send rpc calls.
+
+  client = RawJsonRpc::ClientSocket.new('192.168.2.10', 8080) #creates TCP client
+  ret = client.request("func1", nil)                 #calles func1 with no para
+    			     		       	     #returns result in ret
+  ret = client.request("func2", 1, 3.0, :test, "om") #calles func2 with 4 paras
+  ret = client.func3([1, 2, 3, 4])                   #calles func3 with a array
+  client.notification("noti", 1, "t")                #send notifaction no 
+			     			     #return value
+  client.close()
+
+== Use server TCP simple
+
+Use the libary to serve functions over tcp ip. 
+
+  client = RawJsonRpc::SimpleServerSocket.new(8080)
+  client.add_method("func1", method("do_stuff1")) # adds do_stuff1 as "func1"
+  client.add_method("foo", method(:bar))          # adds bar as foo
+  client.add_block("func2"){|a,b, *c|              # adds a block with 2 args
+    #do stuff 			 		  # and args as func2
+  }
+  client.serve()
+
+== use gserver TCP
+
+Lock in the stdlib for usage. The server delivers automaticly the functions.
+Beware of adding methods or blocks after starting.
+
+
+  server = RawJsonRpc::TCPServer.new(#args)
+
+== implement your own jsonclient
+ 
+Boilerplate Code to create your own client.
+
+  class superclient < RawJsonRpc::RawClientJsonRpc 
+    def initiailize(*args)
+     # init stream
+    end
+  
+    def send_request(jsonstring)
+      #send stream
+    end
+
+    def get_response
+      #return the response
+    end
+
+    def close
+      #close resources if needed
+    end
+  end
+
+== implement your server
+
+The boilerplattecode to create a new server.
+
+  class superserver
+    include RawJsonRpc::RawServerJsonRpc
+
+    def initizial(*args)
+      #init
+    end
+
+    def serve
+      #get data from client
+      response = execute(jsonstring) #transfers the string and calls function
+                                   #return response string or nil if its a
+		  		   #notification
+      #send response
+    end
+
+    def end
+      #stuff
+    end 
+  end
+
+== known issues
+
+* Block arguments can't be checkt because they are blocks not lamdbas
+
+== Your implementations
+
+feel free to contribute your client and servers to the project.
+
+== TODO 
+* add examples
+* add doc for gserver implementation
+* add a piping server and client
+* fix block argumentchecks
 
 == Contributing to rawjsonrpc
  

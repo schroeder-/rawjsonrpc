@@ -10,6 +10,7 @@ require 'socket'
 require 'logger'
 require 'json'
 require 'gserver'
+require_relative 'error'
 
 module RawJsonRpc
   # Implements the basic server functions
@@ -20,52 +21,59 @@ module RawJsonRpc
   # Add Functions
   #
   ## server.add_method("run", methode(:test)) #adds methode test as "run"
-  ## server.add_blocks("attack"){ |target, dir, times|
+  ## server.add_block("attack"){ |target, dir, times|
   ##    #stuff
   ## }
-  module RawServerJsonRpcBase
+  module RawServerJsonRpc
     # Adds methode to be executed
     def add_method(name, func)
-      @funcs ||= { }
-      @funcs[name] = func
+      @rawjsonrpc_funcs ||= {}
+      @rawjsonrpc_blocks ||= {}
+      @rawjsonrpc_funcs[name] = func
     end
     # Adds blocks that get executed
-    def add_blocks(name, &block)
-      @blocks ||= { }
-      @blocks[name] = block
+    # Arguments can not checkt because they are procs no lambdas if you can
+    # provied a hack plz contribute.
+    def add_block(name, &block)
+      @rawjsonrpc_blocks ||= {}
+      @rawjsonrpc_funcs ||= {}
+      @rawjsonrpc_blocks[name] = block
     end
     protected
     # Handels json string input and calls the methode and returns a return
     # string or nil if its a notification.
     def execute(input)
       begin
-        @request = JSON.load(input)
-        @noti = if @request["id"] == nil then true
+        request_data = JSON.load(input)
+        @rawjsonrpc_noti = if request_data["id"] == nil then true
                 else false
                 end
-        if @hash.has_key?(@request["method"])
-          ret = @hash[@request["method"]].call(*@request["params"])
+        @rawjsonrpc_id = request_data["id"]
+        if @rawjsonrpc_funcs.has_key?(request_data["method"])
+          ret = @rawjsonrpc_funcs[request_data["method"]].call(*request_data["params"])
+        elsif @rawjsonrpc_blocks.has_key?(request_data["method"])
+          ret = @rawjsonrpc_blocks[request_data["method"]].call(*request_data["params"])
         else
-          @back = request
+          @rawjsonrpc_back = request_data
           raise("No Methode")
         end
-        if @request["id"] != nil
-          response = {"result" => ret, "error" => nil, "id" => @request["id"]}
+        if request_data["id"] != nil
+          response_data = {"result" => ret, "error" => nil, "id" => request_data["id"]}
             .to_json
         else nil
         end
       rescue => ex
-        unless @noti
+        unless @rawjsonrpc_noti
           response = {"result" => nil, "error" => ex.message,
-            "id" => @request["id"]}.to_json
+            "id" => @rawjsonrpc_id}.to_json
         end
       end
     end
   end
   # Implements RawServerJsonRpcBase for a TCPServer, that can only handle
   # one client at once.
-  class SimpleServerSockJsonRpc
-    include RawServerJsonRpcBase
+  class ServerSocket
+    include RawServerJsonRpc
     # sets the port for serving. Optimal you can add a logger object to log
     # server activities.
     def initialize(port, logger=nil)
@@ -118,7 +126,7 @@ module RawJsonRpc
   end
   # Implements the RawServerJsonRpcBase as GServer the stdlib SocketServer. For
   # more information go one to the stdlib.
-  class TCPServerJsonRpc < GServer
-    include RawServerJsonRpcBase
+  class TCPServer < GServer
+    include RawServerJsonRpc
   end
 end

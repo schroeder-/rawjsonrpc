@@ -8,7 +8,11 @@
 # efford.
 # Also it provides a TCP client and two TCP Servers.
 # Feel free to provid your implmentations to the project.
+
 module RawJsonRpc
   # :nodoc:
   VERSION = "0.0.1"# :nodoc:
 end
+require_relative 'rawjsonrpc/error'
+require_relative 'rawjsonrpc/server'
+require_relative 'rawjsonrpc/client'

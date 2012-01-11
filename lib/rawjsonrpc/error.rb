@@ -8,8 +8,6 @@
 # :startdoc:
 
 
-module RawJsonRpc
-  # Raises Rpc specified Errors
-  class RpcError < StandartException
-  end
+class RpcError < StandardError
 end
+
