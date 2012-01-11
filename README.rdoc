@@ -16,7 +16,7 @@ include rawjsonrpc in your programm
 
   require 'rawjsonrpc'
 
-== Use the client TCP 
+== Use the TCP client 
 
 Create a client to send rpc calls.
 
@@ -26,7 +26,7 @@ Create a client to send rpc calls.
   ret = client.request("func2", 1, 3.0, :test, "om") #calles func2 with 4 paras
   ret = client.func3([1, 2, 3, 4])                   #calles func3 with a array
   client.notification("noti", 1, "t")                #send notifaction no 
-			     			     #return value
+			     			     # #return value
   client.close()
 
 == Use server TCP simple
@@ -86,7 +86,7 @@ The boilerplattecode to create a new server.
       #get data from client
       response = execute(jsonstring) #transfers the string and calls function
                                    #return response string or nil if its a
-		  		   #notification
+		  		   # #notification
       #send response
     end
 
