@@ -89,8 +89,8 @@ module RawJsonRpc
     end
     public
     # Starts the servering the methods for clients
-    def server
-      check log.level, "start serving data at " + @port.to_s
+    def serve
+      check @log, "start serving data at " + @port.to_s
       server = TCPServer.new(@port)
       client = server.accept
       loop do
