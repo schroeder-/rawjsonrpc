@@ -7,7 +7,7 @@
 # This is free software. Please see the LICENSE and COPYING files for details.
 
 require 'socket'
-require 'logger'
+#require 'logger'
 require 'json'
 require 'gserver'
 require_relative 'error'
@@ -76,48 +76,34 @@ module RawJsonRpc
     include RawServerJsonRpc
     # sets the port for serving. Optimal you can add a logger object to log
     # server activities.
-    def initialize(port, logger=nil)
+    def initialize(port)
       @port = port
-      @log = logger
     end
-    private
-    #checks logger
-    def check(logger, para)
-      if @log != nil
-        logger.call(para)
-      end
-    end
+
     public
     # Starts the servering the methods for clients
     def serve
-      check @log.info, "start serving data at " + @port.to_s
-      server = TCPServer.new(@port)
-      client = server.accept
+      ser = TCPServer.new(@port)
+      client = ser.accept
       loop do
         begin
           data = client.gets
           if data == nil or data == "END\n"
-            check @log.info, "client closed connection"
             client.close
             client = server.accept
             next
           end
-          check @log.info, "recived from client " + data
           data = execute(data)
           if data != nil
-            check @log.info, "send to client " + data
             client.puts(data)
           end
         rescue SocketError
-          check @log.info, "client closed connection"
           client.close
           client = server.accept
         #  Exception from get killed
         rescue Errno::EPIPE
-          check @log.info, "server get killed"
           exit
         rescue => ex
-          check @log.fatal, "server get killed from: " + ex.message
           client.close
           raise ex
         end
@@ -126,7 +112,7 @@ module RawJsonRpc
   end
   # Implements the RawServerJsonRpcBase as GServer the stdlib SocketServer. For
   # more information go one to the stdlib.
-  class TCPServer < GServer
+  class JSONTCPServer < GServer
     include RawServerJsonRpc
   end
 end
