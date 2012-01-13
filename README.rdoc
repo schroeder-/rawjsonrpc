@@ -32,13 +32,15 @@ Create a client to send rpc calls.
 
 Use the libary to serve functions over tcp ip. 
 
-  client = RawJsonRpc::SimpleServerSocket.new(8080)
-  client.add_method("func1", method("do_stuff1")) # adds do_stuff1 as "func1"
-  client.add_method("foo", method(:bar))          # adds bar as foo
-  client.add_block("func2"){|a,b, *c|              # adds a block with 2 args
+  server = RawJsonRpc::ServerSocket.new(8080)
+  server.add_method("func1", method("do_stuff1")) # adds do_stuff1 as 
+"func1"
+  server.add_method("foo", method(:bar))          # adds bar as foo
+  server.add_block("func2"){|a,b, *c|              # adds a block with 2 
+args
     #do stuff 			 		  # and args as func2
   }
-  client.serve()
+  server.serve()
 
 == use gserver TCP
 
