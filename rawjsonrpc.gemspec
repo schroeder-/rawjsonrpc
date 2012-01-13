@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "rawjsonrpc"
-  s.version = "0.1.0"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Schrode"]
-  s.date = "2012-01-11"
+  s.date = "2012-01-13"
   s.description = "A basic libary for json rpc that allow you to easly create one for your streamtype. It includes tcp json rpc on socket connections. Version for single clients server, one for multiple clients server based on gserver are served and a TCP client."
   s.email = "midix01@googlemail.com"
   s.extra_rdoc_files = [
