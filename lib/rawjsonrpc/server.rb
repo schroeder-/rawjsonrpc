@@ -58,13 +58,13 @@ module RawJsonRpc
           raise("No Methode")
         end
         if request_data["id"] != nil
-          response_data = {"result" => ret, "error" => nil, "id" => request_data["id"]}
+          {"result" => ret, "error" => nil, "id" => request_data["id"]}
             .to_json
         else nil
         end
       rescue => ex
         unless @rawjsonrpc_noti
-          response = {"result" => nil, "error" => ex.message,
+          {"result" => nil, "error" => ex.message,
             "id" => @rawjsonrpc_id}.to_json
         end
       end
