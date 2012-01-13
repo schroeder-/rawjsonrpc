@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "rawjsonrpc"
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Schrode"]
@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
     "rawjsonrpc-0.1.0.gem",
     "rawjsonrpc-0.1.2.gem",
     "rawjsonrpc-0.1.3.gem",
+    "rawjsonrpc-0.1.4.gem",
     "rawjsonrpc.gemspec",
     "test/helper.rb",
     "test/test_rawjsonrpc.rb"
