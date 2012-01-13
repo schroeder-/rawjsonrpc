@@ -67,6 +67,8 @@ Gem::Specification.new do |s|
     "lib/rawjsonrpc/client.rb",
     "lib/rawjsonrpc/error.rb",
     "lib/rawjsonrpc/server.rb",
+    "rawjsonrpc-0.1.0.gem",
+    "rawjsonrpc-0.1.2.gem",
     "rawjsonrpc.gemspec",
     "test/helper.rb",
     "test/test_rawjsonrpc.rb"
