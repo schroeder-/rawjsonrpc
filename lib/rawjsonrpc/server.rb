@@ -7,7 +7,6 @@
 # This is free software. Please see the LICENSE and COPYING files for details.
 
 require 'socket'
-#require 'logger'
 require 'json'
 require 'gserver'
 require_relative 'error'
@@ -70,50 +69,15 @@ module RawJsonRpc
       end
     end
   end
-  # Implements RawServerJsonRpcBase for a TCPServer, that can only handle
-  # one client at once.
-  class ServerSocket
-    include RawServerJsonRpc
-    # sets the port for serving. Optimal you can add a logger object to log
-    # server activities.
-    def initialize(port)
-      @port = port
-    end
-
-    public
-    # Starts the servering the methods for clients
-    def serve
-      ser = TCPServer.new(@port)
-      client = ser.accept
-      loop do
-        begin
-          data = client.gets
-          if data == nil or data == "END\n"
-            client.close
-            client = ser.accept
-            next
-          end
-          data = execute(data)
-          if data != nil
-            client.puts(data)
-          end
-        rescue SocketError
-          client.close
-          client = ser.accept
-        #  Exception from get killed
-        rescue Errno::EPIPE
-          exit
-        rescue => ex
-          puts ex
-          client.close
-          raise ex
-        end
-      end
-    end
-  end
   # Implements the RawServerJsonRpcBase as GServer the stdlib SocketServer. For
   # more information go one to the stdlib.
   class JSONTCPServer < GServer
     include RawServerJsonRpc
+    def serve(io)
+      loop do
+        data = io.gets
+        io.puts execute(data)
+      end
+    end
   end
 end

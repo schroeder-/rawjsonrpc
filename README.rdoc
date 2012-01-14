@@ -1,8 +1,7 @@
 = rawjsonrpc
 
 rawjsonrpc is a libary to create a jsonrpc client for every type of stream. It
-also profides one client for tcpsocket, an server for one client and on server
-based on gserver from the ruby stdlib. 
+also profides an server and client over tcpip. 
 This is libary is a my first try in ruby to create a gem. Its more a test how 
 gems work but i hope i can help somebody with this lib. 
 
@@ -28,27 +27,18 @@ Create a client to send rpc calls.
   client.notification("noti", 1, "t")                #send notifaction no return value
   client.close()
 
-== Use server TCP simple
+== Use the TCP server
 
-Use the libary to serve functions over tcp ip. 
+Use the gserver to serve data over tcp ip 
 
-  server = RawJsonRpc::ServerSocket.new(8080)
-  server.add_method("func1", method("do_stuff1")) # adds do_stuff1 as 
-"func1"
+  server = RawJsonRpc::JSONTCPServer.new(8080)
+  server.add_method("func1", method("do_stuff1")) # adds do_stuff1 as "func1"
   server.add_method("foo", method(:bar))          # adds bar as foo
-  server.add_block("func2"){|a,b, *c|              # adds a block with 2 
-args
+  server.add_block("func2"){|a,b, *c|              # adds a block with 2 args
     #do stuff 			 		  # and args as func2
   }
-  server.serve()
-
-== use gserver TCP
-
-Lock in the stdlib for usage. The server delivers automaticly the functions.
-Beware of adding methods or blocks after starting.
-
-
-  server = RawJsonRpc::TCPServer.new(#args)
+  server.start
+  server.join
 
 == implement your own jsonclient
  
