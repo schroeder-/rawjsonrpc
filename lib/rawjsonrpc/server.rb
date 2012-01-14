@@ -90,7 +90,7 @@ module RawJsonRpc
           data = client.gets
           if data == nil or data == "END\n"
             client.close
-            client = server.accept
+            client = ser.accept
             next
           end
           data = execute(data)
@@ -99,11 +99,12 @@ module RawJsonRpc
           end
         rescue SocketError
           client.close
-          client = server.accept
+          client = ser.accept
         #  Exception from get killed
         rescue Errno::EPIPE
           exit
         rescue => ex
+          puts ex
           client.close
           raise ex
         end
